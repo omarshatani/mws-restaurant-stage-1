@@ -36,6 +36,8 @@ fillNeighborhoodsHTML = (neighborhoods = self.neighborhoods) => {
     const option = document.createElement('option');
     option.innerHTML = neighborhood;
     option.value = neighborhood;
+    option.setAttribute('aria-label', neighborhood);
+    option.setAttribute('role', 'option');
     select.append(option);
   });
 }
@@ -64,6 +66,8 @@ fillCuisinesHTML = (cuisines = self.cuisines) => {
     const option = document.createElement('option');
     option.innerHTML = cuisine;
     option.value = cuisine;
+    option.setAttribute('aria-label', cuisine);
+    option.setAttribute('role', 'option');
     select.append(option);
   });
 }
@@ -78,7 +82,7 @@ initMap = () => {
         scrollWheelZoom: false
       });
   L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.jpg70?access_token={mapboxToken}', {
-    mapboxToken: '<your MAPBOX API KEY HERE>',
+    mapboxToken: 'pk.eyJ1Ijoib21hci0iLCJhIjoiY2pqeXhocWhkNG5sNjNwcGJiMmk5ZzZjcSJ9.Y9mqxjI5D8aRATYXKG1unw',
     maxZoom: 18,
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
       '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
@@ -160,6 +164,7 @@ createRestaurantHTML = (restaurant) => {
 
   const image = document.createElement('img');
   image.className = 'restaurant-img';
+  image.alt = restaurant.name;
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
   li.append(image);
 
@@ -208,4 +213,31 @@ addMarkersToMap = (restaurants = self.restaurants) => {
     self.markers.push(marker);
   });
 } */
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/sw.js')
+    .then(function(reg) {
+
+    if (reg.active) {
+      console.log("SW is active");
+      return;
+    }
+
+    if (reg.waiting) {
+      console.log("SW is waiting");
+      return;
+    }
+
+    if (reg.installing) {
+      console.log("SW is installing");
+      return;
+    }
+
+  })
+    .catch(function (error) {
+      console.log("ERROR " + error);
+    })
+  });
+}
 
